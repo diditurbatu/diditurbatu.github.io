@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --ink: #111110;
+      --muted: #888;
+      --faint: #ccc;
+      --accent: #1f6b4a;
+      --border: #dddbd6;
+      --sidebar: 220px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar) 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar);
+      height: 100vh;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem 2rem;
+      background: var(--bg);
+    }
+    .sidebar-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.2rem;
+      line-height: 1.2;
+    }
+    .sidebar-role {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 2.5rem;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--faint);
+      text-decoration: none;
+      padding: 0.35rem 0;
+      transition: color 0.2s;
+    }
+    nav a::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.2s;
+      flex-shrink: 0;
+    }
+    nav a:hover { color: var(--ink); }
+    nav a:hover::before { width: 28px; }
+    nav a.active { color: var(--ink); }
+    nav a.active::before { width: 28px; background: var(--accent); }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 0.68rem;
+      color: var(--faint);
+      line-height: 1.6;
+    }
+    .sidebar-footer a {
+      color: var(--faint);
+      text-decoration: none;
+      display: block;
+      transition: color 0.2s;
+    }
+    .sidebar-footer a:hover { color: var(--ink); }
+
+    /* ── Main content ── */
+    main {
+      margin-left: var(--sidebar);
+    }
+
+    /* ── Section blocks ── */
+    .block {
+      padding: 5rem 4rem;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.5s ease both;
+    }
+    .block:last-child { border-bottom: none; }
+    .block-label {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .block-label::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--accent);
+      opacity: 0.4;
+    }
+
+    /* ── Hero block ── */
+    #hero {
+      padding-top: 6rem;
+      padding-bottom: 5rem;
+    }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.6rem, 4.5vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title span { color: var(--muted); font-weight: 400; }
+    .hero-sub {
+      font-size: 0.95rem;
+      color: #666;
+      max-width: 440px;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      font-style: italic;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.7rem 1.4rem;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ── About block ── */
+    .about-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-body p {
+      font-size: 0.92rem;
+      color: #555;
+      margin-bottom: 0.9rem;
+      line-height: 1.85;
+    }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .stat-row:first-child { border-top: 1px solid var(--border); }
+    .stat-key {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .stat-val {
+      font-size: 0.82rem;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    /* ── Projects ── */
+    .project {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      padding: 2.2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .project:first-child { padding-top: 0; }
+    .project:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .proj-type {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .proj-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .proj-desc {
+      font-size: 0.86rem;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      max-width: 500px;
+    }
+    .proj-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .stack-tag {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.6rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.18rem 0.5rem;
+    }
+    .proj-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding-top: 0.3rem;
+    }
+    .proj-link {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .proj-link:hover { color: var(--accent); }
+
+    /* ── Contact ── */
+    .contact-intro {
+      font-size: 0.95rem;
+      color: #555;
+      font-style: italic;
+      line-height: 1.85;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .contact-cell {
+      padding: 1.4rem 1.6rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cell-label {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .cell-value {
+      font-size: 0.85rem;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .cell-value:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Animation ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      aside {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 1.5rem;
+      }
+      .sidebar-role, .sidebar-footer { display: none; }
+      nav ul { flex-direction: row; gap: 0.5rem; }
+      nav a::before { display: none; }
+      main { margin-left: 0; }
+      .block { padding: 3rem 1.5rem; }
+      .about-cols { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .project { grid-template-columns: 1fr; }
+      .proj-links { flex-direction: row; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-name">Your Name</div>
+    <div class="sidebar-role">AI Engineer<br>Bioinformatician</div>
+    <nav>
+      <ul>
+        <li><a href="#hero" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://scholar.google.com" target="_blank" rel="noopener">Scholar ↗</a>
+      <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <section class="block" id="hero">
+      <h1 class="hero-title">
+        AI Engineer<br>&amp; <span>Bioinfor-<br>matician.</span>
+      </h1>
+      <p class="hero-sub">
+        I build models, pipelines, and tools at the intersection
+        of machine learning and the life sciences.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-filled" href="#work">Selected Work</a>
+        <a class="btn" href="#contact">Get in Touch</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="block" id="about">
+      <div class="block-label">About</div>
+      <div class="about-cols">
+        <div class="about-body">
+          <p>
+            I'm a researcher and engineer with a background in both computational
+            biology and deep learning. My work spans genomics, single-cell analysis,
+            and building ML models that address real biological questions.
+          </p>
+          <p>
+            I care about reproducible science, well-documented code, and tools that
+            other researchers can actually run. Most of my work is open source.
+          </p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-row">
+            <span class="stat-key">Focus</span>
+            <span class="stat-val">AI · Genomics · scRNA</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Languages</span>
+            <span class="stat-val">Python · R</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Frameworks</span>
+            <span class="stat-val">PyTorch · TensorFlow</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Status</span>
+            <span class="stat-val">Open to collabs</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Based in</span>
+            <span class="stat-val">Your City</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="block" id="work">
+      <div class="block-label">Selected Work</div>
+
+      <div class="project">
+        <div>
+          <div class="proj-type">Deep Learning</div>
+          <div class="proj-title">Gene Expression Transformer</div>
+          <p class="proj-desc">
+            A transformer-based model trained on bulk RNA-seq data to predict cell type
+            from raw gene expression profiles. Lightweight and interpretable, with
+            attention visualisation to surface biologically meaningful genes.
+          </p>
+          <div class="proj-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">PyTorch</span>
+            <span class="stack-tag">RNA-seq</span>
+            <span class="stack-tag">Transformers</span>
+            <span class="stack-tag">HuggingFace</span>
+          </div>
+        </div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://github.com/yourusername/project" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="proj-link" href="#" target="_blank" rel="noopener">Paper ↗</a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="proj-type">Bioinformatics Pipeline</div>
+          <div class="proj-title">scRNA-seq Analysis Toolkit</div>
+          <p class="proj-desc">
+            End-to-end single-cell RNA sequencing pipeline built on Scanpy.
+            Handles QC, normalisation, dimensionality reduction, clustering,
+            and differential expression with a single config file.
+          </p>
+          <div class="proj-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">Scanpy</span>
+            <span class="stack-tag">UMAP</span>
+            <span class="stack-tag">Leiden</span>
+          </div>
+        </div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://github.com/yourusername/project" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="proj-type">Machine Learning</div>
+          <div class="proj-title">Variant Effect Predictor</div>
+          <p class="proj-desc">
+            Gradient-boosted classifier predicting the functional impact of genomic
+            variants using sequence-derived features and population frequency data.
+          </p>
+          <div class="proj-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">XGBoost</span>
+            <span class="stack-tag">VCF</span>
+            <span class="stack-tag">Genomics</span>
+          </div>
+        </div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://github.com/yourusername/project" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <div class="proj-type">Statistical Modelling · R</div>
+          <div class="proj-title">Differential Methylation Analysis</div>
+          <p class="proj-desc">
+            R package for genome-wide differential methylation analysis on WGBS data.
+            Implements smoothing splines and mixed-effects models with publication-ready
+            ggplot2 visualisations. Available on Bioconductor.
+          </p>
+          <div class="proj-stack">
+            <span class="stack-tag">R</span>
+            <span class="stack-tag">Bioconductor</span>
+            <span class="stack-tag">WGBS</span>
+            <span class="stack-tag">ggplot2</span>
+          </div>
+        </div>
+        <div class="proj-links">
+          <a class="proj-link" href="https://github.com/yourusername/project" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="proj-link" href="#" target="_blank" rel="noopener">Bioconductor ↗</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CONTACT -->
+    <section class="block" id="contact">
+      <div class="block-label">Contact</div>
+      <p class="contact-intro">
+        Open to research collaborations, open-source contributions,
+        and interesting problems at the intersection of AI and biology.
+      </p>
+      <div class="contact-grid">
+        <div class="contact-cell">
+          <div class="cell-label">Email</div>
+          <a class="cell-value" href="mailto:you@email.com">you@email.com</a>
+        </div>
+        <div class="contact-cell">
+          <div class="cell-label">GitHub</div>
+          <a class="cell-value" href="https://github.com/yourusername" target="_blank" rel="noopener">github.com/yourusername</a>
+        </div>
+        <div class="contact-cell">
+          <div class="cell-label">LinkedIn</div>
+          <a class="cell-value" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">linkedin.com/in/yourprofile</a>
+        </div>
+        <div class="contact-cell">
+          <div class="cell-label">Google Scholar</div>
+          <a class="cell-value" href="https://scholar.google.com" target="_blank" rel="noopener">Your profile ↗</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
